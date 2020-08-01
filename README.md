@@ -147,6 +147,6 @@ cdk deploy --profile your_profile_name
 
  # Pricing
 
-As this cdk stack will create bastion host instance using T3.nano, please refer the following link for pricing
+As this cdk stack will create bastion host instance using `T3.nano`, please refer the following link for pricing
 
 - [EC2 Pricing](https://aws.amazon.com/ec2/instance-types/t3/#Product_Details)
