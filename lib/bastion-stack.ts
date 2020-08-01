@@ -22,6 +22,6 @@ export class BastionStack extends cdk.Stack {
       subnetSelection: {
         subnetType: ec2.SubnetType.PUBLIC
       }    
-    });
+    });    
   }
 }

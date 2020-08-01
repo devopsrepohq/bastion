@@ -121,6 +121,10 @@ or
 cdk deploy --profile your_profile_name
 ```
 
+# Use cases
+
+Act as the jumpbox to access your private cloud resources via SSM Session Manager.
+
 # Useful commands
 
 ## NPM commands
