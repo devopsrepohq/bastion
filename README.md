@@ -4,6 +4,10 @@ Use this CDK stack to create a bastion host instance.
 
 ![Bastion host architecture](https://github.com/devopsrepohq/bastion/blob/master/_docs/bastion.png?raw=true)
 
+# What is it?
+
+Bastion hosts enables you to securely connect to your Linux instances without exposing your environment to the Internet. After you set up your bastion hosts, you can access the other instances in your VPC through Secure Shell (SSH) connections on Linux.
+
 # Features
 
 - [x] Deploy a bastion host instance in public subnet.
