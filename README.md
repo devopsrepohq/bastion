@@ -25,6 +25,70 @@ You will need the following before utilize this CDK stack:
 
 # Stack Explain
 
+## lib/vpc-stack.ts
+
+Setup standard VPC with public, private, and isolated subnets.
+
+```
+const vpc = new ec2.Vpc(this, 'Vpc', {
+  maxAzs: 3,
+  natGateways: 1,
+  cidr: '10.0.0.0/16',
+  subnetConfiguration: [
+    {
+      cidrMask: 24,
+      name: 'ingress',
+      subnetType: ec2.SubnetType.PUBLIC,
+    },
+    {
+      cidrMask: 24,
+      name: 'application',
+      subnetType: ec2.SubnetType.PRIVATE,
+    },
+    {
+      cidrMask: 28,
+      name: 'rds',
+      subnetType: ec2.SubnetType.ISOLATED,
+    }
+  ]
+});
+```
+
+- maxAzs - Define 3 AZs to use in this region.
+- natGateways - Create only 1 NAT Gateways/Instances.
+- cidr - Use '10.0.0.0/16' CIDR range for the VPC.
+- subnetConfiguration - Build the public, private, and isolated subnet for each AZ.
+
+Create flowlog and log the vpc's reject traffic into cloudwatch.
+
+```
+vpc.addFlowLog('FlowLogCloudWatch', {
+  trafficType: ec2.FlowLogTrafficType.REJECT     
+});
+```
+
+## lib/security-stack.ts
+
+Get vpc create from vpc stack
+
+```
+const { vpc } = props;
+```
+
+Create security group for bastion host
+
+```
+const bastionSecurityGroup = new ec2.SecurityGroup(this, 'BastionSecurityGroup', {
+  vpc: vpc,
+  allowAllOutbound: true,
+  description: 'Security group for bastion host'
+});
+```
+
+- vpc - Use vpc created from vpc stack.
+- allowAllOutbound - Allow outbound rules for access internet
+- description - Description for security group
+
 ## lib/bastion-stack.ts
 
 Get the vpc and bastionSecurityGroup from vpc and security stacks.
