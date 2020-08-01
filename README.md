@@ -1,14 +1,84 @@
-# Welcome to your CDK TypeScript project!
+# Bastion
 
-This is a blank project for TypeScript development with CDK.
+Use this CDK stack to create a bastion host instance.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+![Bastion host architecture](https://github.com/devopsrepohq/bastion/blob/master/_docs/bastion.png?raw=true)
 
-## Useful commands
+# Features
+
+- [x] Deploy a bastion host instance in public subnet.
+
+# Prerequisites
+
+You will need the following before utilize this CDK stack:
+
+- [AWS CLI](https://cdkworkshop.com/15-prerequisites/100-awscli.html)
+- [AWS Account and User](https://cdkworkshop.com/15-prerequisites/200-account.html)
+- [Node.js](https://cdkworkshop.com/15-prerequisites/300-nodejs.html)
+- [IDE for your programming language](https://cdkworkshop.com/15-prerequisites/400-ide.html)
+- [AWS CDK Tookit](https://cdkworkshop.com/15-prerequisites/500-toolkit.html)
+- [AWS Toolkit VSCode Extension](https://github.com/devopsrepohq/aws-toolkit)
+
+# Stack Explain
+
+## lib/bastion-stack.ts
+
+Get the vpc and bastionSecurityGroup from vpc and security stacks.
+
+```
+const { vpc, bastionSecurityGroup } = props;
+```
+
+Create bastion host instance in public subnet
+
+```
+const bastionHostLinux = new ec2.BastionHostLinux(this, 'BastionHostLinux', {  
+  vpc: vpc,
+  securityGroup: bastionSecurityGroup,
+  subnetSelection: {
+    subnetType: ec2.SubnetType.PUBLIC
+  }
+});
+```
+
+- vpc - Use vpc created from vpc stack.
+- securityGroup - Use security group created from security stack.
+- subnetSelection - Create the instance in public subnet.
+
+Deploy the stack to your aws account.
+
+```
+cdk deploy
+or
+cdk deploy --profile your_profile_name
+```
+
+# Useful commands
+
+## NPM commands
 
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
  * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+
+## Toolkit commands
+
+ * `cdk list (ls)`            Lists the stacks in the app
+ * `cdk synthesize (synth)`   Synthesizes and prints the CloudFormation template for the specified stack(s)
+ * `cdk bootstrap`            Deploys the CDK Toolkit stack, required to deploy stacks containing assets
+ * `cdk deploy`               Deploys the specified stack(s)
+ * `cdk deploy '*'`           Deploys all stacks at once
+ * `cdk destroy`              Destroys the specified stack(s)
+ * `cdk destroy '*'`          Destroys all stacks at once
+ * `cdk diff`                 Compares the specified stack with the deployed stack or a local CloudFormation template
+ * `cdk metadata`             Displays metadata about the specified stack
+ * `cdk init`                 Creates a new CDK project in the current directory from a specified template
+ * `cdk context`              Manages cached context values
+ * `cdk docs (doc)`           Opens the CDK API reference in your browser
+ * `cdk doctor`               Checks your CDK project for potential problems
+
+ # Pricing
+
+As this cdk stack will create bastion host instance using T3.nano, please refer the following link for pricing
+
+- [EC2 Pricing](https://aws.amazon.com/ec2/instance-types/t3/#Product_Details)
