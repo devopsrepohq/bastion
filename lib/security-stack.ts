@@ -21,7 +21,7 @@ export class SecurityStack extends cdk.Stack {
       vpc: vpc,
       allowAllOutbound: true,
       description: 'Security group for bastion host',
-      securityGroupName: 'bastion-security-group'
+      securityGroupName: 'BastionSecurityGroup'
     });
 
     // Allow ssh access to bastion host
