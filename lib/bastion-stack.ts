@@ -15,7 +15,7 @@ export class BastionStack extends cdk.Stack {
     // Get the vpc and bastionSecurityGroup from vpc stack
     const { vpc, bastionSecurityGroup } = props;
 
-    // Get projectName and env from context variables
+    // Get profile from context variables
     const profile = this.node.tryGetContext('profile');
 
     // Create bastion host instance in public subnet

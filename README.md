@@ -117,6 +117,12 @@ Get the vpc and bastionSecurityGroup from vpc and security stacks.
 const { vpc, bastionSecurityGroup } = props;
 ```
 
+Get profile from context variables
+
+```
+const profile = this.node.tryGetContext('profile');
+```
+
 Create bastion host instance in public subnet
 
 ```
