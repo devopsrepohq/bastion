@@ -92,13 +92,15 @@ Create security group for bastion host
 const bastionSecurityGroup = new ec2.SecurityGroup(this, 'BastionSecurityGroup', {
   vpc: vpc,
   allowAllOutbound: true,
-  description: 'Security group for bastion host'
+  description: 'Security group for bastion host',
+  securityGroupName: 'bastion-security-group'
 });
 ```
 
 - vpc - Use vpc created from vpc stack.
 - allowAllOutbound - Allow outbound rules for access internet
 - description - Description for security group
+- securityGroupName - Define the security group name
 
 ## lib/bastion-stack.ts
 
