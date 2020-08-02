@@ -25,6 +25,19 @@ You will need the following before utilize this CDK stack:
 
 # Stack Explain
 
+## cdk.json
+
+Define project-name and env context variables in cdk.json
+
+```
+{
+  "context": {
+    "project-name": "container",
+    "env": "dev" 
+  }
+}
+```
+
 ## lib/vpc-stack.ts
 
 Setup standard VPC with public, private, and isolated subnets.
