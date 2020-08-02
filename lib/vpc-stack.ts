@@ -34,11 +34,9 @@ export class VpcStack extends cdk.Stack {
     });
 
     // Create flowlog and log the vpc traffic into cloudwatch
-    vpc.addFlowLog('FlowLogCloudWatch', {
-      trafficType: ec2.FlowLogTrafficType.REJECT     
-    });
+    vpc.addFlowLog('FlowLog');
 
     // Assign the vpc to class property
-    this.vpc = vpc;    
+    this.vpc = vpc;
   }
 }

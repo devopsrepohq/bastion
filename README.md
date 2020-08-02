@@ -59,12 +59,10 @@ const vpc = new ec2.Vpc(this, 'Vpc', {
 - cidr - Use '10.0.0.0/16' CIDR range for the VPC.
 - subnetConfiguration - Build the public, private, and isolated subnet for each AZ.
 
-Create flowlog and log the vpc's reject traffic into cloudwatch.
+Create flowlog and log the vpc traffic into cloudwatch
 
 ```
-vpc.addFlowLog('FlowLogCloudWatch', {
-  trafficType: ec2.FlowLogTrafficType.REJECT     
-});
+vpc.addFlowLog('FlowLog');
 ```
 
 ## lib/security-stack.ts
