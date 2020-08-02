@@ -137,12 +137,12 @@ Display commands for connect bastion host using ec2 instance connect
 
 ```
 const createSshKeyCommand = 'ssh-keygen -t rsa -f my_rsa_key';
-const pushSshKeyCommand = `aws ec2-instance-connect send-ssh-public-key --region ${cdk.Aws.REGION} --instance-id ${bastionHostLinux.instanceId} --availability-zone ${bastionHostLinux.instanceAvailabilityZone} --instance-os-user ec2-user --ssh-public-key file://my_rsa_key.pub ${profile ? `--profile ${profile}` : ''}`
-const sshCommand = `ssh -o "IdentitiesOnly=yes" -i my_rsa_key ec2-user@${bastionHostLinux.instancePublicDnsName}`
+const pushSshKeyCommand = `aws ec2-instance-connect send-ssh-public-key --region ${cdk.Aws.REGION} --instance-id ${bastionHostLinux.instanceId} --availability-zone ${bastionHostLinux.instanceAvailabilityZone} --instance-os-user ec2-user --ssh-public-key file://my_rsa_key.pub ${profile ? `--profile ${profile}` : ''}`;
+const sshCommand = `ssh -o "IdentitiesOnly=yes" -i my_rsa_key ec2-user@${bastionHostLinux.instancePublicDnsName}`;
         
 new cdk.CfnOutput(this, 'CreateSshKeyCommand', { value: createSshKeyCommand });
-new cdk.CfnOutput(this, 'PushSshKeyCommand', { value: pushSshKeyCommand })
-new cdk.CfnOutput(this, 'SshCommand', { value: sshCommand})
+new cdk.CfnOutput(this, 'PushSshKeyCommand', { value: pushSshKeyCommand });
+new cdk.CfnOutput(this, 'SshCommand', { value: sshCommand});
 ```
 
 Deploy all the stacks to your aws account.
