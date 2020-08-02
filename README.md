@@ -27,13 +27,14 @@ You will need the following before utilize this CDK stack:
 
 ## cdk.json
 
-Define project-name and env context variables in cdk.json
+Define project-name, env and profile context variables in cdk.json
 
 ```
 {
   "context": {
     "project-name": "container",
-    "env": "dev" 
+    "env": "dev",
+    "profile": "devopsrepo"
   }
 }
 ```
