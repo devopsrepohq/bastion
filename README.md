@@ -103,6 +103,12 @@ const bastionSecurityGroup = new ec2.SecurityGroup(this, 'BastionSecurityGroup',
 - description - Description for security group
 - securityGroupName - Define the security group name
 
+Allow ssh access to bastion host
+
+```
+bastionSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'SSH access');
+```
+
 ## lib/bastion-stack.ts
 
 Get the vpc and bastionSecurityGroup from vpc and security stacks.
