@@ -9,3 +9,7 @@ cdk.out
 
 # Parcel default cache directory
 .parcel-cache
+
+# Ignore key pair
+my_rsa_key
+my_rsa_key.pub

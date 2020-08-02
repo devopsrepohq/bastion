@@ -126,17 +126,54 @@ const bastionHostLinux = new ec2.BastionHostLinux(this, 'BastionHostLinux', {
 - securityGroup - Use security group created from security stack.
 - subnetSelection - Create the instance in public subnet.
 
-Deploy the stack to your aws account.
+Display commands for connect bastion host using ec2 instance connect
 
 ```
-cdk deploy
+const createSshKeyCommand = 'ssh-keygen -t rsa -f my_rsa_key';
+const pushSshKeyCommand = `aws ec2-instance-connect send-ssh-public-key --region ${cdk.Aws.REGION} --instance-id ${bastionHostLinux.instanceId} --availability-zone ${bastionHostLinux.instanceAvailabilityZone} --instance-os-user ec2-user --ssh-public-key file://my_rsa_key.pub ${profile ? `--profile ${profile}` : ''}`
+const sshCommand = `ssh -o "IdentitiesOnly=yes" -i my_rsa_key ec2-user@${bastionHostLinux.instancePublicDnsName}`
+        
+new cdk.CfnOutput(this, 'CreateSshKeyCommand', { value: createSshKeyCommand });
+new cdk.CfnOutput(this, 'PushSshKeyCommand', { value: pushSshKeyCommand })
+new cdk.CfnOutput(this, 'SshCommand', { value: sshCommand})
+```
+
+Deploy all the stacks to your aws account.
+
+```
+cdk deploy '*'
 or
-cdk deploy --profile your_profile_name
+cdk deploy '*' --profile your_profile_name
 ```
 
 # Use cases
 
-Act as the jumpbox to access your private cloud resources via SSM Session Manager.
+Act as the jumpbox to access your private cloud resources via ec2 instance connect.
+
+Follow the step below to access your bastion host via ec2 instance connect:
+
+1. Generate ssh key pair in your local machine
+
+    ```
+    ssh-keygen -t rsa -f my_rsa_key
+    ```
+
+2. Push the ssh public key to your bastion host instance
+
+    ```
+    aws ec2-instance-connect send-ssh-public-key \
+      --region <region_name>
+      --instance-id <instance_id>
+      --availability-zone <availability_zone>
+      --instance-os-user ec2-user
+      --ssh-public-key file://my_rsa_key.pub
+    ```
+
+3. Access your bastion host via ssh
+
+    ```
+    ssh -o "IdentitiesOnly=yes" -i my_rsa_key ec2-user@<public_dns_name_for_your_bastion_host>
+    ```
 
 # Useful commands
 

@@ -9,6 +9,7 @@ import { SecurityStack } from '../lib/security-stack';
 import { VpcStack } from '../lib/vpc-stack';
 
 const app = new cdk.App();
+
 const vpcStack = new VpcStack(app, 'VpcStack');
 const securityStack = new SecurityStack(app, 'SecurityStack', { vpc: vpcStack.vpc });
 new BastionStack(app, 'BastionStack', { vpc: vpcStack.vpc, bastionSecurityGroup: securityStack.bastionSecurityGroup });
