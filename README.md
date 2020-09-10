@@ -1,18 +1,16 @@
-# Bastion
-
 Use this CDK stack to create a bastion host instance.
 
-![Bastion host architecture](https://github.com/devopsrepohq/bastion/blob/master/_docs/bastion.png?raw=true)
+![Bastion host architecture](https://images.prismic.io/devopsrepo/8b1451cb-40be-43d8-970d-b2c3318561e5_bastion.png?auto=compress,format)
 
-# What is it?
+## What is it?
 
 Bastion hosts enables you to securely connect to your Linux instances without exposing your environment to the Internet. After you set up your bastion hosts, you can access the other instances in your VPC through Secure Shell (SSH) connections on Linux.
 
-# Features
+## Features
 
 - [x] Deploy a bastion host instance in public subnet.
 
-# Prerequisites
+## Prerequisites
 
 You will need the following before utilize this CDK stack:
 
@@ -23,13 +21,13 @@ You will need the following before utilize this CDK stack:
 - [AWS CDK Tookit](https://cdkworkshop.com/15-prerequisites/500-toolkit.html)
 - [AWS Toolkit VSCode Extension](https://github.com/devopsrepohq/aws-toolkit)
 
-# Stack Explain
+## Stack Explain
 
-## cdk.json
+### cdk.json
 
 Define project-name, env and profile context variables in cdk.json
 
-```
+```javascript
 {
   "context": {
     "project-name": "container",
@@ -39,11 +37,11 @@ Define project-name, env and profile context variables in cdk.json
 }
 ```
 
-## lib/vpc-stack.ts
+### lib/vpc-stack.ts
 
 Setup standard VPC with public, private, and isolated subnets.
 
-```
+```javascript
 const vpc = new ec2.Vpc(this, 'Vpc', {
   maxAzs: 3,
   natGateways: 1,
@@ -75,21 +73,21 @@ const vpc = new ec2.Vpc(this, 'Vpc', {
 
 Create flowlog and log the vpc traffic into cloudwatch
 
-```
+```javascript
 vpc.addFlowLog('FlowLog');
 ```
 
-## lib/security-stack.ts
+### lib/security-stack.ts
 
 Get vpc create from vpc stack
 
-```
+```javascript
 const { vpc } = props;
 ```
 
 Create security group for bastion host
 
-```
+```javascript
 const bastionSecurityGroup = new ec2.SecurityGroup(this, 'BastionSecurityGroup', {
   vpc: vpc,
   allowAllOutbound: true,
@@ -105,27 +103,27 @@ const bastionSecurityGroup = new ec2.SecurityGroup(this, 'BastionSecurityGroup',
 
 Allow ssh access to bastion host
 
-```
+```javascript
 bastionSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'SSH access');
 ```
 
-## lib/bastion-stack.ts
+### lib/bastion-stack.ts
 
 Get the vpc and bastionSecurityGroup from vpc and security stacks.
 
-```
+```javascript
 const { vpc, bastionSecurityGroup } = props;
 ```
 
 Get profile from context variables
 
-```
+```javascript
 const profile = this.node.tryGetContext('profile');
 ```
 
 Create bastion host instance in public subnet
 
-```
+```javascript
 const bastionHostLinux = new ec2.BastionHostLinux(this, 'BastionHostLinux', {  
   vpc: vpc,
   securityGroup: bastionSecurityGroup,
@@ -141,7 +139,7 @@ const bastionHostLinux = new ec2.BastionHostLinux(this, 'BastionHostLinux', {
 
 Display commands for connect bastion host using ec2 instance connect
 
-```
+```javascript
 const createSshKeyCommand = 'ssh-keygen -t rsa -f my_rsa_key';
 const pushSshKeyCommand = `aws ec2-instance-connect send-ssh-public-key --region ${cdk.Aws.REGION} --instance-id ${bastionHostLinux.instanceId} --availability-zone ${bastionHostLinux.instanceAvailabilityZone} --instance-os-user ec2-user --ssh-public-key file://my_rsa_key.pub ${profile ? `--profile ${profile}` : ''}`;
 const sshCommand = `ssh -o "IdentitiesOnly=yes" -i my_rsa_key ec2-user@${bastionHostLinux.instancePublicDnsName}`;
@@ -153,13 +151,13 @@ new cdk.CfnOutput(this, 'SshCommand', { value: sshCommand});
 
 Deploy all the stacks to your aws account.
 
-```
+```bash
 cdk deploy '*'
 or
 cdk deploy '*' --profile your_profile_name
 ```
 
-# Use cases
+## Use cases
 
 Act as the jumpbox to access your private cloud resources via ec2 instance connect.
 
@@ -167,13 +165,13 @@ Follow the step below to access your bastion host via ec2 instance connect:
 
 1. Generate ssh key pair in your local machine
 
-    ```
+    ```bash
     ssh-keygen -t rsa -f my_rsa_key
     ```
 
 2. Push the ssh public key to your bastion host instance
 
-    ```
+    ```bash
     aws ec2-instance-connect send-ssh-public-key \
       --region <region_name>
       --instance-id <instance_id>
@@ -184,19 +182,19 @@ Follow the step below to access your bastion host via ec2 instance connect:
 
 3. Access your bastion host via ssh
 
-    ```
+    ```bash
     ssh -o "IdentitiesOnly=yes" -i my_rsa_key ec2-user@<public_dns_name_for_your_bastion_host>
     ```
 
-# Useful commands
+## Useful commands
 
-## NPM commands
+### NPM commands
 
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
  * `npm run test`    perform the jest unit tests
 
-## Toolkit commands
+### Toolkit commands
 
  * `cdk list (ls)`            Lists the stacks in the app
  * `cdk synthesize (synth)`   Synthesizes and prints the CloudFormation template for the specified stack(s)
@@ -212,7 +210,7 @@ Follow the step below to access your bastion host via ec2 instance connect:
  * `cdk docs (doc)`           Opens the CDK API reference in your browser
  * `cdk doctor`               Checks your CDK project for potential problems
 
- # Pricing
+## Pricing
 
 As this cdk stack will create bastion host instance using `T3.nano`, please refer the following link for pricing
 
